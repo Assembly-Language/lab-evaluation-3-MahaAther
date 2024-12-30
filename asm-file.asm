@@ -1,28 +1,38 @@
-INCLUDE Irvine32.inc 
+INCLUDE Irvine32.inc
+
 .data
-msg2 byte "total positive num",0
-.code 
-asmfunc PROC array:DWORD, p2:DWORD
-    mov eax, 0           ; Clear eax (not used directly here)
-    mov ebx, 0           ; Counter for positive numbers
-    mov esi, array       ; Load address of array into esi
-    mov ecx, p2          ; Load the count of array elements into ecx
-next:
-    mov eax, [esi]       ; Load current element into eax
-    cmp eax, 0           ; Compare with zero
-    je skip             ; If less than or equal to zero, skip
-    inc ebx              ; Increment counter for positive numbers
+msg2 BYTE "Total positive numbers: ", 0
+
+.code
+asmfunc PROC array:PTR DWORD, p2:DWORD
+    ; Initialize registers
+    xor ebx, ebx            ; Clear ebx (positive number counter)
+    mov esi, array          ; Load address of the array into esi
+    mov ecx, p2         ; Load the number of elements into ecx
+
+check_next:
+    cmp ecx, 0              ; Check if there are elements left
+    jz finish               ; If no elements left, finish
+    mov eax, [esi]          ; Load current array element into eax
+    cmp eax, 0              ; Compare element with 0
+    jle skip                ; If <= 0, skip incrementing counter
+    inc ebx                 ; Increment positive number counter
+
 skip:
-    add esi, TYPE array  ; Move to the next element
-    loop next            ; Repeat for all elements
-    ; Print total positive numbers
-    mov edx, offset msg2 ; Load the address of msg2 into edx
-    call writestring     ; Print the message string
-    call crlf            ; Newline
-    mov eax, ebx         ; Move the count of positive numbers into eax
-    call writeint        ; Print the positive count
-    call crlf            ; Newline
-    
-    ret
+    add esi, 4              ; Move to the next DWORD element
+    loop check_next         ; Repeat for remaining elements
+
+finish:
+    ; Display the message
+    mov edx, OFFSET msg2    ; Load address of msg2 into edx
+    call WriteString        ; Display the message
+    call Crlf               ; Newline
+
+    ; Display the count of positive numbers
+    mov eax, ebx            ; Load the count into eax
+    call WriteInt           ; Print the integer
+    call Crlf               ; Newline
+
+    ret                     ; Return to caller
 asmfunc ENDP
-end
+END
