@@ -11,7 +11,7 @@ asmfunc PROC array:DWORD, p2:DWORD
 next:
     mov eax, [esi]       ; Load current element into eax
     cmp eax, 0           ; Compare with zero
-    jle skip             ; If less than or equal to zero, skip
+    je skip             ; If less than or equal to zero, skip
     inc ebx              ; Increment counter for positive numbers
 
 skip:
