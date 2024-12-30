@@ -1,12 +1,9 @@
 #include <stdio.h>
 //extern "C" void __stdcall asmfunc(void);
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-void __stdcall asmfunc(int array[],int length );
-
+void __stdcall asmfunc(int array[],int length);
 #ifdef __cplusplus
 }
 #endif
